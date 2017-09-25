@@ -1,22 +1,16 @@
-const Config = {
-    bucket : 'miniprogram', // 默认Bucket
-    password : 'xdxd1078',
-    operator  : 'admin'
-};
 
-const API_URL = 'http://v0.api.upyun.com';
-
+const Config = require('../config/api').upyun;
 const crypto = require('crypto');
 const encrypt = require('./encrypt');
 /*
  * saveKey 存储的路径 /demo.jpg
  * bucket 存储的Bucket
  */
-function genPolicy(saveKey, bucket=false, contentMd5 = false) {
+function genPolicy(fileName, bucket=false, contentMd5 = false) {
     let sec = Math.round(Date.now()/1000) + 3600;
     let obj = {
         'bucket' : bucket||Config.bucket,
-        'save-key' : saveKey, // '/demo.jpg'
+        'save-key' : '/' + fileName, // '/demo.jpg'
         'expiration' : sec,
         'date' : (new Date).toGMTString()
     };
@@ -35,9 +29,9 @@ function genSign(saveKey, bucket=false, method='post') {
 
     let met = method.toUpperCase()||'POST';
 
-    let policy = genPolicy(saveKey, bucket);
+    let policy = genPolicy(saveKey);
 
-    let URI = '/' + saveKey;
+    let URI = '/' + (bucket||Config.bucket);
 
     let date = (new Date).toGMTString();
 

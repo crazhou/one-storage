@@ -9,7 +9,7 @@ $(function(){
     });
 
 
-    field.on('change', function(e){
+    field.on('change', function(e) {
         var files = this.files;
         if(files.length>0) {
             var file = files[0];
@@ -28,8 +28,9 @@ $(function(){
             success: function(resp) {
                 if(resp.code === 1000) {
                     fn&&fn({
-                        'authorization' : 'UPYUN admin:' + resp.data.sign,
-                        'policy' : resp.data.policy
+                        'authorization' : 'UPYUN ' + resp.data.operator + ':' + resp.data.sign,
+                        'policy' : resp.data.policy,
+                        'formurl' : resp.data.formurl
                     });
                 } else {
                     alert('接口异常！');
@@ -46,18 +47,15 @@ $(function(){
 
 
     function startUpload(f) {
-        const upyunURL = 'http://v0.api.upyun.com/miniprogram';
-
         fetchPoSign(f.name, function(obj) {
             let ff = new FormData();
             $.each(obj, function(i,e) {
-                console.log('K:V->', i, e);
                 ff.append(i, e);
             });
             ff.append('file', f);
 
             $.ajax({
-                url:upyunURL,
+                url:obj.formurl,
                 data:ff,
                 dataType:'json',
                 type:'POST',
