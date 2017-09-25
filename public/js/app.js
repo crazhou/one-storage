@@ -61,8 +61,10 @@ $(function(){
                 type:'POST',
                 contentType:false,
                 processData:false,
-                success: function() {
-
+                success: function(resp) {
+                    if(resp.code === 200) {
+                        alert('文件上传成功！');
+                    }
                 }
             });
 
