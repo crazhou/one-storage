@@ -1,18 +1,20 @@
 const express = require('express');
 const path = require('path');
 const formapi = require('../tools/formapi');
-const Config = require('../config/api').upyun;
+const Config = require('../config/api');
 
 module.exports = {
     init:function(app) {
+
+        let UpyunConfig = Config.upyun;
         // 取生成的Policy 和 Sign
         app.get('/fetchSign', function(req, res) {
             
             let file = req.query.f;
             
-            let formurl = Config.API_URL + '/' + Config.bucket;
+            let formurl = UpyunConfig.API_URL + '/' + UpyunConfig.bucket;
 
-            let operator = Config.operator;
+            let operator = UpyunConfig.operator;
 
             if(file) {
                 let sign = formapi.genSign(file);
@@ -47,5 +49,17 @@ module.exports = {
         };
 
         app.use(express.static(path.resolve(__dirname, '../public'), options));
+
+        /*
+         * 微信相关处理 Token验证
+         */
+        
+        app.get('/wx004', function(req, res) {
+
+        });
+
+        app.post('/wx004', function(req, res){
+
+        });
     }
 }
