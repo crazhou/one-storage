@@ -1,6 +1,12 @@
 const crypto = require('crypto');
 const fs = require('fs');
 
+exports.sha1 = function(str) {
+    let shatmp = crypto.createHash('sha1');
+    shatmp.update(str);
+    return shatmp.digest('hex');
+};
+
 exports.md5 = function(str) {
     let md5sum = crypto.createHash('md5');
     md5sum.update(str);

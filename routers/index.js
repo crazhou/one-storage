@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const encrypt = require('../tools/encrypt')
 const formapi = require('../tools/formapi');
 const Config = require('../config/api');
 
@@ -53,13 +54,31 @@ module.exports = {
         /*
          * 微信相关处理 Token验证
          */
+
+        let WxConfig = Config.weixin;
         
         app.get('/wx004', function(req, res) {
+            let echostr = req.query.echostr,
+                nonce = req.query.nonce,
+                signature = req.query.signature,
+                timestamp = req.query.timestamp;
+
+            let mm = [WxConfig.Token, timestamp, nonce].sort().join('');
+            let cSign = encrypt.sha1(mm);
+
+            console.log('signatrue:', cSign, signature);
+
+            if(cSign === signature) {
+                res.send(echostr);
+            } else {
+                res.send('bad Token');
+            }
 
         });
 
-        app.post('/wx004', function(req, res){
+        app.post('/wx004', function(req, res) {
 
+            res.send('success');
         });
     }
 }
