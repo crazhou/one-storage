@@ -45,28 +45,36 @@ $(function(){
         
     };
 
+    function progressFunction(event) {
+
+        console.log('Event->', event.type, event);
+
+    }
+
 
     function startUpload(f) {
+        let stamp1, onload;
         fetchPoSign(f.name, function(obj) {
             let ff = new FormData();
             $.each(obj, function(i,e) {
                 ff.append(i, e);
             });
             ff.append('file', f);
+            let xhr = new XMLHttpRequest;
 
-            $.ajax({
-                url:obj.formurl,
-                data:ff,
-                dataType:'json',
-                type:'POST',
-                contentType:false,
-                processData:false,
-                success: function(resp) {
-                    if(resp.code === 200) {
-                        alert('文件上传成功！');
-                    }
-                }
-            });
+            xhr.open('post', obj.formurl, true);
+            xhr.onload = function(){
+
+            };
+            xhr.onerror = function(err) {
+                console.log('Error', err)
+            };
+            xhr.upload.onprogress = progressFunction;//【上传进度调用方法实现】
+            xhr.upload.onloadstart = function(){//上传开始执行方法
+                stamp1 = Date.now();   //设置上传开始时间
+                onload = 0;//设置上传开始时，以上传的文件大小为0
+            };
+            xhr.send(ff); //开始上传，发送form数据
 
         })
         

@@ -66,8 +66,6 @@ module.exports = {
             let mm = [WxConfig.Token, timestamp, nonce].sort().join('');
             let cSign = encrypt.sha1(mm);
 
-            console.log('signatrue:', cSign, signature);
-
             if(cSign === signature) {
                 res.send(echostr);
             } else {

@@ -7,8 +7,7 @@ module.exports = {
         API_URL : 'http://v0.api.upyun.com' // 前端上传URL
     },
     weixin:{
-        Appid:'wxfb91d31e4d90dec1',
-        AppSecret:'d849f29ce4c8a3edb77b11e96e3c77d3',
+        Appid:'wx15298ca8e539d70f',
         Token:'Laravel2017php715',
         EncodingAESKey:'Gnl5UZ1uTWLm7BRyq3HBad2amh3sq9a92BxhRT78nvH'
     }
