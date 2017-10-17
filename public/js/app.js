@@ -53,6 +53,7 @@ $(function(){
 
 
     function startUpload(f) {
+        let progressBar = $('.progress-bar');
         let stamp1, onload;
         fetchPoSign(f.name, function(obj) {
             let ff = new FormData();
@@ -60,20 +61,37 @@ $(function(){
                 ff.append(i, e);
             });
             ff.append('file', f);
+
             let xhr = new XMLHttpRequest;
 
             xhr.open('post', obj.formurl, true);
-            xhr.onload = function(){
 
+            xhr.onload = function(event) {
+                if(xhr.readyState === xhr.DONE && xhr.status === 200) {
+                    progressBar.css('width', '100%')
+                    .html('上传完成！')
+                    console.log(xhr.responseText);
+                }
             };
             xhr.onerror = function(err) {
                 console.log('Error', err)
             };
-            xhr.upload.onprogress = progressFunction;//【上传进度调用方法实现】
-            xhr.upload.onloadstart = function(){//上传开始执行方法
+            xhr.upload.onprogress = function(event) {
+                console.log('Progress->', event);
+                let precent = Math.round(event.loaded/event.total * 98);
+                console.log('Precent->', precent);
+                progressBar.css('width', precent + '%')
+                .html(precent + '%')
+            };
+            xhr.upload.onloadstart = function(event) {//上传开始执行方法
+                console.log('Start ->', event);
                 stamp1 = Date.now();   //设置上传开始时间
                 onload = 0;//设置上传开始时，以上传的文件大小为0
             };
+            xhr.upload.onloadend = function(event) {
+                console.log('Upload End', this, event);
+            };
+
             xhr.send(ff); //开始上传，发送form数据
 
         })

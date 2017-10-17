@@ -47,10 +47,16 @@ h2 {
 }
 .progress .progress-bar {
     background-color: #007BFF;
+    line-height: 20px;
     height: 20px;
     border-radius: 4px;
     color:#fff;
-    text-align:center;
+    box-sizing: border-box;
+    padding-right: 10px;
+    text-align:right;
+    -webkit-transition: width .3s ease-in-out;
+    transition: width .3s ease-in-out;
+
 }
 .group .btn-up{
     margin-left: 20px;
