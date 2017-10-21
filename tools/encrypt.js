@@ -13,6 +13,12 @@ exports.md5 = function(str) {
     return md5sum.digest('hex');
 };
 
+
+
+/*
+ * 计算文件的md5
+ * 
+ */ 
 exports.md5_file = function(filename, fn) {
     let hash = crypto.createHash('md5');
 

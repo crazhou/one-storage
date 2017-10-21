@@ -4,7 +4,6 @@ $(function(){
 
     $(document).on('click', '#choseBtn', function(e){
         e.preventDefault();
-
         field.trigger('click');
     });
 
@@ -40,17 +39,69 @@ $(function(){
 
             }
         })
-
-
-        
+ 
     };
-
-    function progressFunction(event) {
-
-        console.log('Event->', event.type, event);
-
+    /*
+     * 取验证签名
+     */
+    function fetchAuth(bucket, obj, fn) {
+        var targetPath = obj.path||'/';
+        $.ajax({
+            url : '/fetchAuth',
+            type:'GET',
+            data: {bucket:bucket, path:targetPath, method:obj.method },
+            cache:false,
+            dataType:'json',
+            timeout:15000,
+            success:function(resp) {
+                if(!resp.ret) {
+                    fn&&fn(resp.data);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('ERROR->', textStatus, errorThrown);
+            }
+        })
     }
 
+    function listFile(bucket, obj) {
+        var targetPath = obj.path||'/';
+        fetchAuth('miniprogram', {
+            method:'get',
+            path:'/'
+        }, function(data) {
+            $.ajax({
+                url:data.API_URL + '/' + bucket + targetPath,
+                type:'GET',
+                data: {
+                    'x-list-limit' : 20
+                },
+                dataType:'text',
+                timeout:15000,
+                headers:{
+                    Authorization:data.Authorization,
+                    'X-Date': (new Date).toGMTString()
+                },
+                success: function(resp) {
+                    var arr1 = resp.split(/\n/g);
+                    arr2 = arr1.map(function(item){
+                        return item.split(/\t/g);
+                    })
+                    var _html = _.template($('#tplFilelist').html());
+                    $('.tables').html(_html(arr2));
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('ERROR->', textStatus, errorThrown);
+                }
+
+            })
+        })
+    }
+
+    listFile('miniprogram', {
+        path:'/',
+        pageSize:20
+    });
 
     function startUpload(f) {
         let progressBar = $('.progress-bar');
@@ -77,16 +128,12 @@ $(function(){
                 console.log('Error', err)
             };
             xhr.upload.onprogress = function(event) {
-                console.log('Progress->', event);
                 let precent = Math.round(event.loaded/event.total * 98);
-                console.log('Precent->', precent);
                 progressBar.css('width', precent + '%')
                 .html(precent + '%')
             };
             xhr.upload.onloadstart = function(event) {//上传开始执行方法
                 console.log('Start ->', event);
-                stamp1 = Date.now();   //设置上传开始时间
-                onload = 0;//设置上传开始时，以上传的文件大小为0
             };
             xhr.upload.onloadend = function(event) {
                 console.log('Upload End', this, event);

@@ -41,7 +41,39 @@ function genSign(saveKey, bucket=false, method='post') {
 
 }
 
+/*
+ * 获取签名认证：
+ * Authorization: UPYUN admin:<Signature>
+ * <Signature> = Base64(HMAC-SHA1 (<Password>,
+ * <Method>&
+ * <URI>&
+ * <Date>&
+ * <Content-MD5>
+ * ))
+ */
+ function getAuth(uri, method = 'GET',  operator='admin', password = 'xdxd1078') {
+
+    const hmac = crypto.createHmac('sha1', encrypt.md5(password));
+    
+    let met = method||'GET';
+    
+    let date = (new Date).toGMTString();
+    
+    hmac.update([met, uri, date].join('&'));
+
+    return 'UPYUN ' + operator + ':' + hmac.digest('base64');
+ }
+
+ function parseList(text) {
+     var Li01 = text.split(/\n/g);
+     return Li01.map(n => {
+         return n.split(/\t/g);
+     });
+ }
+
 module.exports = {
     genPolicy,
-    genSign
+    genSign,
+    getAuth,
+    parseList
 };

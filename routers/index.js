@@ -1,13 +1,40 @@
 const express = require('express');
 const path = require('path');
 const encrypt = require('../tools/encrypt')
-const formapi = require('../tools/formapi');
+const formAPI = require('../tools/formapi');
 const Config = require('../config/api');
+const request = require('request');
+
+
+request.debug = true;
 
 module.exports = {
     init:function(app) {
 
         let UpyunConfig = Config.upyun;
+        /*
+         * bucket path met 三个参数取 Authorization
+         */
+        app.get('/fetchAuth', function(req, res) {
+            var bucket = req.query.bucket;
+            var path = req.query.path;
+            var met  = req.query.method.toUpperCase();
+
+            var uri = '/' + bucket + path;
+
+            var header = formAPI.getAuth(uri, met);
+
+            res.json({
+                ret:0,
+                data: {
+                    Authorization:header,
+                    API_URL:UpyunConfig.API_URL
+                }
+            });
+
+        });
+
+
         // 取生成的Policy 和 Sign
         app.get('/fetchSign', function(req, res) {
             
@@ -18,8 +45,8 @@ module.exports = {
             let operator = UpyunConfig.operator;
 
             if(file) {
-                let sign = formapi.genSign(file);
-                let policy = formapi.genPolicy(file);
+                let sign = formAPI.genSign(file);
+                let policy = formAPI.genPolicy(file);
                 res.json({
                     code:1000,
                     data: {
