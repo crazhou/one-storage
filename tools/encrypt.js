@@ -12,9 +12,6 @@ exports.md5 = function(str) {
     md5sum.update(str);
     return md5sum.digest('hex');
 };
-
-
-
 /*
  * 计算文件的md5
  * 
