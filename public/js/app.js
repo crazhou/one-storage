@@ -73,14 +73,12 @@ $(function(){
             $.ajax({
                 url:data.API_URL + '/' + bucket + targetPath,
                 type:'GET',
-                data: {
-                    'x-list-limit' : 20
-                },
                 dataType:'text',
                 timeout:15000,
                 headers:{
                     Authorization:data.Authorization,
-                    'X-Date': (new Date).toGMTString()
+                    'X-Date': (new Date).toGMTString(),
+                    'x-list-limit' : 10
                 },
                 success: function(resp) {
                     var arr1 = resp.split(/\n/g);
