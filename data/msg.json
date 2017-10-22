@@ -1,8 +1,0 @@
-{
-"encrypt_type"	: "aes",
-"msg_signature"	: "6845422625227202cfbdd4e574e6c116ce0b59ad",
-"nonce"	: "1985438111",
-"openid" : "o6v2mwUamFaBxmaUyZVFoZYsBdvs",
-"signature"	: "ec93f7ff998acf9062836a87861ef848cb7acb3f",
-"timestamp"	: "1507651912"
-}
