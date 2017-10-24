@@ -4,7 +4,7 @@ module.exports = {
         bucket : 'miniprogram', // 默认Bucket
         password : 'xdxd1078',
         operator  : 'admin',
-        API_URL : 'http://v0.api.upyun.com' // 前端上传URL
+        API_URL : 'https://v0.api.upyun.com' // 前端上传URL
     },
     weixin:{
         Appid:'wx15298ca8e539d70f',
